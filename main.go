@@ -3,17 +3,16 @@ package main
 import "fmt"
 
 func main() {
-	forever := make(chan string)
+	hello := make(chan string)
 
 	go func() {
-		x := true
-		for {
-			if x == true {
-				continue
-			}
-		}
+		hello <- "hello world"
 	}()
 
-	fmt.Println("Aguardado para sempre")
-	<-forever
+	select {
+	case x := <-hello:
+		fmt.Println(x)
+	default:
+		fmt.Println("a...: default")
+	}
 }
