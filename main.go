@@ -5,19 +5,27 @@ import (
 	"time"
 )
 
+func worker(workerId int, msg chan int, confirmation chan bool) {
+	for res := range msg {
+		fmt.Printf("a...: Worker: %d Msg: %d\n", workerId, res)
+		confirmation <- true
+		time.Sleep(time.Second)
+	}
+}
+
 func main() {
-	queue := make(chan int)
+	msg := make(chan int)
+	confimation := make(chan bool)
 
-	go func() {
-		i := 0
-		for {
-			time.Sleep(time.Second)
-			queue <- i
-			i++
-		}
-	}()
+	nworkers := 100
+	nrequests := 1000
 
-	for x := range queue {
-		fmt.Println(x)
+	for i := 0; i <= nworkers; i++ {
+		go worker(i, msg, confimation)
+	}
+
+	for i := 0; i <= nrequests; i++ {
+		msg <- i
+		<-confimation
 	}
 }
