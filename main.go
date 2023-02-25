@@ -1,18 +1,23 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
-	hello := make(chan string)
+	queue := make(chan int)
 
 	go func() {
-		hello <- "hello world"
+		i := 0
+		for {
+			time.Sleep(time.Second)
+			queue <- i
+			i++
+		}
 	}()
 
-	select {
-	case x := <-hello:
+	for x := range queue {
 		fmt.Println(x)
-	default:
-		fmt.Println("a...: default")
 	}
 }
