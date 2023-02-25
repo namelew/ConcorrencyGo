@@ -1,21 +1,15 @@
 package main
 
-import (
-	"fmt"
-	"runtime"
-	"time"
-)
+import "fmt"
 
 func main() {
-	runtime.GOMAXPROCS(1)
-	fmt.Println("a: Começou...")
+	hello := make(chan string)
 
 	go func() {
-		for {
-
-		}
+		hello <- "Hello World"
 	}()
 
-	time.Sleep(time.Second)
-	fmt.Println("a: Terminou")
+	result := <-hello
+
+	fmt.Println(result)
 }
